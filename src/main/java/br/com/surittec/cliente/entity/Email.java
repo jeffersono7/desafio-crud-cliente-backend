@@ -18,7 +18,7 @@ public class Email {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column("id")
+    @Column(name = "id")
     private Long id;
 
     private String nome;

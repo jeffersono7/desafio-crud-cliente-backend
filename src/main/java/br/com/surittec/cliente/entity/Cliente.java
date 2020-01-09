@@ -25,7 +25,7 @@ public class Cliente {
     private Long id;
 
     @NotNull
-    @Size(min = "3", max = "100")
+    @Size(min = 3, max = 100)
     @Column(name = "nome")
     private String nome;
 
