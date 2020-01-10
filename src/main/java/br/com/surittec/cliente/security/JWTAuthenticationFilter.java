@@ -1,5 +1,6 @@
 package br.com.surittec.cliente.security;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -9,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JWTAuthenticationFilter extends GenericFilterBean {
@@ -17,10 +19,16 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        Authentication authentication = TokenAuthenticationService.getAuthentication((HttpServletRequest) request);
+        try {
+            Authentication authentication = TokenAuthenticationService.getAuthentication((HttpServletRequest) request);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
+            httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value());
+        }
     }
 }
