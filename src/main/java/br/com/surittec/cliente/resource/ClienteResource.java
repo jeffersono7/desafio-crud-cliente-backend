@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,20 +26,18 @@ public class ClienteResource {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ObjectNode> criar(ObjectNode objectNode) {
-        ObjectNode response = clienteService.criar(objectNode);
+    public ResponseEntity<Cliente> criar(ObjectNode objectNode) {
+        Cliente response = clienteService.criar(objectNode);
 
-        String id = response.get("id").asText();
+        String id = response.getId().toString();
 
         return ResponseEntity.created(URI.create(id)).body(response);
     }
 
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ObjectNode> atualizar(ObjectNode objectNode) {
-        ObjectNode response = clienteService.atualizar(objectNode);
-
-        String id = response.get("id").asText();
+    public ResponseEntity<Cliente> atualizar(ObjectNode objectNode) {
+        Cliente response = clienteService.atualizar(objectNode);
 
         return ResponseEntity.ok().body(response);
     }
@@ -51,10 +50,13 @@ public class ClienteResource {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ObjectNode> obter(Long id) {
-        ObjectNode response = clienteService.obter(id);
+    public ResponseEntity<Optional<Cliente>> obter(Long id) {
+        Optional<Cliente> response = clienteService.obter(id);
 
-        return ResponseEntity.ok(response);
+        if (response.isPresent()) {
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")

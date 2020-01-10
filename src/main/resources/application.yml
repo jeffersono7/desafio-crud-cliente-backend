@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:file:/tmp/banco3;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS CLIENTE
+    url: jdbc:h2:file:/tmp/banco4;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS CLIENTE
     username: cliente
     password: cliente
     driver-class-name: org.h2.Driver

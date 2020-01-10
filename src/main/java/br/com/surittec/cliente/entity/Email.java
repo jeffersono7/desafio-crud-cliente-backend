@@ -21,6 +21,7 @@ public class Email {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "nome")
     private String nome;
 
     @ManyToOne(optional = false)
