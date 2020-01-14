@@ -1,19 +1,23 @@
 package br.com.surittec.cliente.service;
 
+import br.com.surittec.cliente.DTO.ClienteDTO;
 import br.com.surittec.cliente.entity.Cliente;
 import br.com.surittec.cliente.entity.Email;
 import br.com.surittec.cliente.entity.Endereco;
 import br.com.surittec.cliente.entity.Telefone;
+import br.com.surittec.cliente.entity.TipoTelefone;
 import br.com.surittec.cliente.repository.ClienteRepository;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +30,12 @@ public class ClienteService {
 
     private final ObjectMapper objectMapper;
 
-    public Cliente criar(ObjectNode objectNode) {
-        Cliente cliente = getClienteByNode(objectNode);
-        Endereco endereco = getEnderecoByNode(objectNode);
+    public Cliente criar(ClienteDTO dto) {
+        Cliente cliente = new Cliente();
+        BeanUtils.copyProperties(dto, cliente);
+
+        Endereco endereco = new Endereco();
+        BeanUtils.copyProperties(dto, endereco);
 
         Endereco enderecoSalvo = enderecoService.save(endereco);
         cliente.setEndereco(enderecoSalvo);
@@ -36,15 +43,47 @@ public class ClienteService {
         cliente.setId(null);
         Cliente clienteSalvo = clienteRepository.save(cliente);
 
-        List<Email> emails = getEmailByNode(objectNode);
+        List<Email> emails = getEmailByClienteDTO(dto);
         emails.forEach(email -> email.setCliente(clienteSalvo));
         emailService.salvar(emails);
 
-        List<Telefone> telefones = getTelefoneByNode(objectNode);
+        List<Telefone> telefones = getTelefoneByDTO(dto);
         telefones.forEach(telefone -> telefone.setCliente(cliente));
         telefoneService.salvar(telefones);
 
         return clienteSalvo;
+    }
+
+    private List<Telefone> getTelefoneByDTO(ClienteDTO dto) {
+        return dto.getTelefone()
+                .stream()
+                .map(telefoneDTO -> {
+                    Long idTipoTelefone = telefoneDTO.getTipoTelefone().getId();
+
+                    Telefone telefone = new Telefone();
+
+                    TipoTelefone tipoTelefone = new TipoTelefone();
+                    tipoTelefone.setId(idTipoTelefone);
+
+                    telefone.setNumero(telefoneDTO.getNumero());
+                    telefone.setTipoTelefone(tipoTelefone);
+
+                    return telefone;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<Email> getEmailByClienteDTO(ClienteDTO dto) {
+
+        return dto.getEmail()
+                .stream()
+                .map(emailDTO -> {
+                    Email email = new Email();
+                    email.setNome(emailDTO.getNome());
+
+                    return email;
+                })
+                .collect(Collectors.toList());
     }
 
     public Cliente atualizar(ObjectNode objectNode) {

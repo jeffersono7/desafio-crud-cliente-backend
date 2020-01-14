@@ -1,5 +1,6 @@
 package br.com.surittec.cliente.resource;
 
+import br.com.surittec.cliente.DTO.ClienteDTO;
 import br.com.surittec.cliente.entity.Cliente;
 import br.com.surittec.cliente.service.ClienteService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,8 +28,8 @@ public class ClienteResource {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Cliente> criar(ObjectNode objectNode) {
-        Cliente response = clienteService.criar(objectNode);
+    public ResponseEntity<Cliente> criar(@RequestBody ClienteDTO dto) {
+        Cliente response = clienteService.criar(dto);
 
         String id = response.getId().toString();
 

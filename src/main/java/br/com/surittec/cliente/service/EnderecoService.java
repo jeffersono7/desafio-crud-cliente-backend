@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EnderecoService {
 
-    private EnderecoRepository enderecoRepository;
+    private final EnderecoRepository enderecoRepository;
 
     public Endereco save(Endereco endereco) {
         endereco.setId(null);
