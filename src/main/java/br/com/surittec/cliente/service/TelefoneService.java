@@ -18,4 +18,8 @@ public class TelefoneService {
 
         return telefoneRepository.saveAll(telefones);
     }
+
+    public List<Telefone> atualizar(List<Telefone> telefones) {
+        return telefoneRepository.saveAll(telefones);
+    }
 }

@@ -18,5 +18,7 @@ public class ApplicationConfiguration {
 
     @Bean
     @Scope(WebApplicationContext.SCOPE_APPLICATION)
-    ObjectMapper objectMapperFactory() { return new ObjectMapper(); }
+    ObjectMapper objectMapperFactory() {
+        return new ObjectMapper();
+    }
 }

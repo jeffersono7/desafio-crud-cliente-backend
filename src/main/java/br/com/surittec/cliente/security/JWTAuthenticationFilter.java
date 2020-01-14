@@ -1,5 +1,6 @@
 package br.com.surittec.cliente.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +26,7 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
-        } catch (IOException e) {
+        } catch (IOException | ExpiredJwtException e) {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
             httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value());

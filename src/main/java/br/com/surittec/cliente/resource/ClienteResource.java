@@ -3,7 +3,6 @@ package br.com.surittec.cliente.resource;
 import br.com.surittec.cliente.DTO.ClienteDTO;
 import br.com.surittec.cliente.entity.Cliente;
 import br.com.surittec.cliente.service.ClienteService;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,8 +37,8 @@ public class ClienteResource {
 
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Cliente> atualizar(ObjectNode objectNode) {
-        Cliente response = clienteService.atualizar(objectNode);
+    public ResponseEntity<Cliente> atualizar(ClienteDTO dto) {
+        Cliente response = clienteService.atualizar(dto);
 
         return ResponseEntity.ok().body(response);
     }

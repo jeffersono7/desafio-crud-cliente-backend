@@ -16,4 +16,8 @@ public class EnderecoService {
 
         return enderecoRepository.save(endereco);
     }
+
+    public Endereco update(Endereco endereco) {
+        return enderecoRepository.save(endereco);
+    }
 }
